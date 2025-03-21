@@ -98,7 +98,7 @@ def load_model():
             model=model.to(torch.device("cuda"),non_blocking=True)
         else:
             model=model.to(torch.device("cpu"),non_blocking=True)
-        model.load_state_dict(torch.load('classifier_model.pth'))
+        model.load_state_dict(torch.load('classifier_model1.pth'))
         model.eval()
         return model
     
