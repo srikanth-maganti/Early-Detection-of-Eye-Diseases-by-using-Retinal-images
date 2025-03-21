@@ -30,48 +30,46 @@ class ImageClassificationBase(nn.Module):
 def accuracy(outputs,labels):
     _,preds=torch.max(outputs,dim=1)
     return torch.tensor(torch.sum(preds==labels).item()/len(preds))
+def conv_block(in_channels,out_channels,pool=False):
+    layers=[nn.Conv2d(in_channels,out_channels,kernel_size=3,padding=1,stride=1),
+           nn.BatchNorm2d(out_channels),
+           nn.ReLU(inplace=True)]
+    if pool:layers.append(nn.MaxPool2d(2))
+    return nn.Sequential(*layers)
 
 
-class CNN_Model(ImageClassificationBase):
-    def __init__(self):
+class ResNet9(ImageClassificationBase):
+    def __init__(self,in_channels,num_classes):
         super().__init__()
-        self.network=nn.Sequential(
-            #input 3X128X128
-            nn.Conv2d(3,32,kernel_size=3,stride=1,padding=1),
-            #output 32X128X128
-            nn.ReLU(),
-            #output 32X128X128
-            nn.Conv2d(32,64,kernel_size=3,stride=1,padding=1),
-           
-            nn.ReLU(),
-            
-            nn.MaxPool2d(2,2),#64X64X64
+        #3X32X32
+        self.conv1=conv_block(in_channels,64)#64X128X128
+        self.conv2=conv_block(64,128,pool=True)#128X64X64
+        self.res1=nn.Sequential(conv_block(128,128),
+                               conv_block(128,128))#128X64X64
+        self.conv3=conv_block(128,256,pool=True) #256X32X32
+        self.conv4=conv_block(256,512,pool=True) #512X16X16
+        self.res2=nn.Sequential(conv_block(512,512),
+                               conv_block(512,512))
 
-            nn.Conv2d(64,128,kernel_size=3,stride=1,padding=1),
-            nn.ReLU(),
-            nn.Conv2d(128,128,kernel_size=3,stride=1,padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2,2),#128X32X32
-
-            nn.Conv2d(128,256,kernel_size=3,stride=1,padding=1),
-            nn.ReLU(),
-            nn.Conv2d(256,256,kernel_size=3,stride=1,padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2,2),#256X16X16
-
-            nn.Conv2d(256,256,kernel_size=3,stride=1,padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2,2),#256X8X8
-
-            nn.Flatten(),
-            nn.Linear(256*8*8,1024),
-            nn.ReLU(),
-            nn.Linear(1024,512),
-            nn.ReLU(),
-            nn.Linear(512,9))
+        # self.conv5=conv_block(512,1024,pool=True) #1024X8x8
+        # self.res3=nn.Sequential(conv_block(1024,1024),
+        #                        conv_block(1024,1024))
+        self.classifier=nn.Sequential(nn.MaxPool2d(4), #512X4X4
+                                     nn.Flatten(),#512
+                                     nn.Dropout(0.2),#to avoid overfitting (randomly pick 20% output and set it to 0)
+                                     nn.Linear(512*4*4,num_classes)) #10
     def forward(self,xb):
-        return self.network(xb)
-    
+        out=self.conv1(xb)
+        out=self.conv2(out)
+        out=self.res1(out)+out
+        out=self.conv3(out)
+        out=self.conv4(out)
+        out=self.res2(out)+out
+        # out=self.conv5(out)
+        # out=self.res3(out)+out
+        out=self.classifier(out)
+        return out
+        
 
 # Function to preprocess image for PyTorch
 def preprocess_image(image):
@@ -95,7 +93,7 @@ def preprocess_image(image):
 # Function to load PyTorch model
 def load_model():
     try:
-        model=CNN_Model()
+        model=ResNet9(3,9)
         if torch.cuda.is_available():
             model=model.to(torch.device("cuda"),non_blocking=True)
         else:
