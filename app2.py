@@ -14,17 +14,16 @@ st.set_page_config(
 )
 
 # Define the categories and their descriptions
-categories = [
-    'Central Serous Chorioretinopathy [Color Fundus]',
-    'Diabetic Retinopathy',
-    'Disc Edema',
-    'Glaucoma',
-    'Healthy',
-    'Macular Scar',
-    'Myopia',
-    'Retinal Detachment',
-    'Retinitis Pigmentosa'
-]
+categories = ['Central Serous Chorioretinopathy_Color Fundus',
+ 'Diabetic Retinopathy',
+ 'Disc Edema',
+ 'Glaucoma',
+ 'Healthy',
+ 'Macular Scar',
+ 'Myopia',
+ 'Pterygium',
+ 'Retinal Detachment',
+ 'Retinitis Pigmentosa']
 
 category_descriptions = {
     'Central Serous Chorioretinopathy [Color Fundus]': 
