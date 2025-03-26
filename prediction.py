@@ -93,7 +93,7 @@ def preprocess_image(image):
 # Function to load PyTorch model
 def load_model():
     try:
-        model=ResNet9(3,9)
+        model=ResNet9(3,10)
         if torch.cuda.is_available():
             model=model.to(torch.device("cuda"),non_blocking=True)
         else:
@@ -120,4 +120,4 @@ def predict(model, image):
         
     except Exception as e:
         st.error(f"Error during prediction: {e}")
-        return np.ones(9) / 9 # Return uniform distribution on error
+        return np.ones(10) / 10 # Return uniform distribution on error

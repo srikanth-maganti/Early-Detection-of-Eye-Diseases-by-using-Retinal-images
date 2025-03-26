@@ -14,20 +14,19 @@ st.set_page_config(
 )
 
 # Define the categories and their descriptions
-categories = [
-    'Central Serous Chorioretinopathy [Color Fundus]',
-    'Diabetic Retinopathy',
-    'Disc Edema',
-    'Glaucoma',
-    'Healthy',
-    'Macular Scar',
-    'Myopia',
-    'Retinal Detachment',
-    'Retinitis Pigmentosa'
-]
+categories = ['Central Serous Chorioretinopathy_Color Fundus',
+ 'Diabetic Retinopathy',
+ 'Disc Edema',
+ 'Glaucoma',
+ 'Healthy',
+ 'Macular Scar',
+ 'Myopia',
+ 'Pterygium',
+ 'Retinal Detachment',
+ 'Retinitis Pigmentosa']
 
 category_descriptions = {
-    'Central Serous Chorioretinopathy [Color Fundus]': 
+    'Central Serous Chorioretinopathy_Color Fundus': 
         "A condition where fluid builds up under the retina, causing a localized detachment. "
         "Symptoms include blurred or distorted vision, reduced visual acuity, and a dark spot in the center of vision. "
         "Often affects people under stress and can resolve on its own within 3-6 months.",
@@ -69,8 +68,11 @@ category_descriptions = {
     'Retinitis Pigmentosa': 
         "A group of rare genetic disorders that involve breakdown and loss of cells in the retina. "
         "Symptoms begin with night blindness and progress to tunnel vision. "
-        "No cure exists, but treatment can help manage symptoms."
-}
+        "No cure exists, but treatment can help manage symptoms.",
+    'Pterygium':
+            "Pterygium, often called surfer's eye, is a non-cancerous growth of fleshy tissue on the conjunctiva, the clear membrane covering the white part of the eye. It typically starts near the corner of the eye and may extend toward the cornea." 
+            " Long-term exposure to UV light, wind, dust, and dry conditions are common causes."
+        }
 
 
 
